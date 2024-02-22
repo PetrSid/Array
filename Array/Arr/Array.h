@@ -35,8 +35,6 @@ namespace ARR
 
 		bool isempty();
 
-		void test();
-
 		Array& operator=(const Array& ar);
 
 		virtual Type& operator[](int index);
