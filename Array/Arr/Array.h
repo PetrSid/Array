@@ -3,6 +3,7 @@
 #define Array_H_
 
 #include <stdio.h>
+#include <cstdlib>
 
 namespace ARR
 {
@@ -37,16 +38,21 @@ namespace ARR
 		Array& operator=(const Array& ar);
 
 		virtual Type& operator[](int index);
-		virtual const Type& operator[](int index) const;
+		virtual Type& operator[](int index) const;
 	};
 
 	//*****************************************************************
 	template<class Type>
 	Array<Type>::Array(int s, int n) {
 		size_array = s;
-		arr = new Type[size_array];
-		for (int i = 0; i < size_array; i++)
-			arr[i] = n;
+		try {
+			arr = new Type[size_array];
+			for (int i = 0; i < size_array; i++)
+				arr[i] = n;
+		}
+		catch (class std::bad_alloc& ba) {
+			printf("%s ", ba.what());
+		}
 	}
 	template<class Type>
 	Array<Type>::~Array() {
@@ -58,9 +64,14 @@ namespace ARR
 	Array<Type>::Array(const Array& ar)
 	{
 		size_array = ar.size_array;
-		arr = new Type[size_array];
-		for (int i = 0; i < size_array; i++)
-			arr[i] = ar.arr[i];
+		try {
+			arr = new Type[size_array];
+			for (int i = 0; i < size_array; i++)
+				arr[i] = ar.arr[i];
+		}
+		catch (class std::bad_alloc& ba) {
+			printf("%s ", ba.what());
+		}
 	}
 	template<class Type>
 	Array<Type>& Array<Type>::operator=(const Array& ar)
@@ -69,17 +80,29 @@ namespace ARR
 			return *this;
 		delete[] arr;
 		size_array = ar.size_array;
-		arr = new Type[size_array];
-		for (int i = 0; i < size_array; i++)
-			arr[i] = ar.arr[i];
-		return *this;
-
+		try {
+			arr = new Type[size_array];
+			for (int i = 0; i < size_array; i++)
+				arr[i] = ar.arr[i];
+			return *this;
+		}
+		catch (class std::bad_alloc& ba) {
+			printf("%s ", ba.what());
+		}
 	}
 	template<class Type>
-	Type& Array<Type>::operator[](int index) { return arr[index]; }
+	Type& Array<Type>::operator[](int index) {
+		if (index >= 0 && index < size_array)
+			return arr[index];
+		exit(EXIT_FAILURE);
+	}
 
 	template<class Type>
-	const Type& Array<Type>::operator[](int index) const { return arr[index]; }
+	Type& Array<Type>::operator[](int index) const {
+		if (index >= 0 && index < size_array)
+			return arr[index];
+		exit(EXIT_FAILURE);
+	}
 
 	template<class Type>
 	int Array<Type>::size() { return size_array; }
