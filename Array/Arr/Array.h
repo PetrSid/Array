@@ -41,7 +41,8 @@ namespace ARR
 		virtual Type& operator[](int index) const;
 	};
 
-	//*****************************************************************
+	//****************************************************************
+
 	template<class Type>
 	Array<Type>::Array(int s, int n) {
 		size_array = s;
